@@ -6,3 +6,8 @@ go build
 ```
 ./server
 ```
+
+## test
+```
+go test
+```
