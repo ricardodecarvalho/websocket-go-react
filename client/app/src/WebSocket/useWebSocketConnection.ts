@@ -1,7 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 
-const useWebSocketConnection = (socketUrl: string) => {
+const WS_URL = import.meta.env.VITE_WS_URL;
+
+type Message = {
+  uuid: string;
+  value: number;
+};
+
+const useWebSocketConnection = () => {
+  const { sessionID } = useParams();
+
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const socketUrl = `${WS_URL}?session=${sessionID}`;
+
   const handleSocketClose = (event: CloseEvent) => {
     console.log("WebSocket is closed with code:", event.code);
     console.log(event.code);
@@ -37,11 +51,18 @@ const useWebSocketConnection = (socketUrl: string) => {
     }
   }, [readyState]);
 
+  useEffect(() => {
+    if (lastJsonMessage !== undefined) {
+      setMessages((prev: Message[]) => [...prev, lastJsonMessage as Message]);
+    }
+  }, [lastJsonMessage]);
+
   return {
     sendMessage,
     lastMessage,
     readyState,
     lastJsonMessage,
+    messages,
   };
 };
 

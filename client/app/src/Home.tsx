@@ -15,7 +15,6 @@ const Home = () => {
 
   return (
     <div>
-      <p>Welcome to the home page!</p>
       <button type="button" onClick={createChannel}>
         Create a channel
       </button>

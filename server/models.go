@@ -13,6 +13,18 @@ type Channel struct {
 }
 
 type Message struct {
-	UserName string `json:"userName"`
-	Value    int    `json:"value"`
+	Type  string  `json:"type"`
+	Users *[]User `json:"users,omitempty"`
+	Vote  *Vote   `json:"vote,omitempty"`
+}
+
+type User struct {
+	UUID        string `json:"uuid"`
+	Name        string `json:"name"`
+	IsModerator bool   `json:"isModerator"`
+}
+
+type Vote struct {
+	User  User `json:"user"`
+	Value int  `json:"value"`
 }

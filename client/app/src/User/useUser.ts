@@ -1,19 +1,28 @@
 import { useState } from "react";
+import { User } from "./types";
 
 const useUser = () => {
-  const [value, setValue] = useState("");
-  const [name, setName] = useState("");
+  const [inputName, setInputName] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[] | null>(null);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+    setInputName(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setName(value);
+  const setUserModerator = (user: User) => {
+    setUser({ ...user, isModerator: true });
   };
 
-  return { name, value, handleNameChange, handleSubmit };
+  return {
+    user,
+    users,
+    inputName,
+    handleNameChange,
+    setUser,
+    setUsers,
+    setUserModerator,
+  };
 };
 
 export default useUser;
