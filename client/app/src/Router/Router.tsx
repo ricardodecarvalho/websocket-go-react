@@ -1,8 +1,7 @@
-
-import { Routes, Route, Link } from 'react-router-dom';
-import Layout from '../Layout';
-import Home from '../Home';
-import Channel from '../Channel';
+import { Routes, Route, Link } from "react-router-dom";
+import Layout from "../Layout";
+import Home from "../Home";
+import Channel from "../Channel";
 
 const Router = () => {
   return (

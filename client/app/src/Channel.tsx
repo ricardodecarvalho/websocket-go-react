@@ -1,74 +1,69 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useWebSocket from "react-use-websocket"
+import useWebSocket from "react-use-websocket";
 
-const WS_URL = 'ws://localhost:8080/ws'
+const WS_URL = "ws://localhost:8080/ws";
 
 type Message = {
   userName: string;
   value: number;
-}
+};
 
 const Channel = () => {
   const { sessionID } = useParams();
 
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
   const [socketUrl] = useState(`${WS_URL}?session=${sessionID}`);
 
   const handleSocketClose = (event: CloseEvent) => {
-    console.log('WebSocket is closed with code:', event.code);
+    console.log("WebSocket is closed with code:", event.code);
     console.log(event.code);
     if (event.code === 4001) {
       console.log("Erro: Session ID is required");
     }
   };
 
-  const {
-    sendMessage,
-    lastMessage,
-    readyState,
-    lastJsonMessage
-  } = useWebSocket(socketUrl, {
-    onOpen: () => console.log('opened'),
-    onClose: handleSocketClose,
-    onError: (event) => console.log('error:', event),
-    onMessage: (event) => {
-      const messageData = JSON.parse(event.data);
-      setMessages(prev => [...prev, messageData] as never[]);
-    },
-  });
-
+  const { sendMessage, lastMessage, readyState, lastJsonMessage } =
+    useWebSocket(socketUrl, {
+      onOpen: () => console.log("opened"),
+      onClose: handleSocketClose,
+      onError: (event) => console.log("error:", event),
+      onMessage: (event) => {
+        const messageData = JSON.parse(event.data);
+        setMessages((prev) => [...prev, messageData] as never[]);
+      },
+    });
 
   useEffect(() => {
     if (lastMessage !== null) {
-      console.log('received a message:', lastMessage.data);
+      console.log("received a message:", lastMessage.data);
     }
   }, [lastMessage]);
 
   useEffect(() => {
     if (lastJsonMessage !== null) {
-      console.log('received a JSON message:', lastJsonMessage);
+      console.log("received a JSON message:", lastJsonMessage);
     }
   }, [lastJsonMessage]);
 
   useEffect(() => {
     switch (readyState) {
       case WebSocket.CONNECTING:
-        console.log('Connecting...');
+        console.log("Connecting...");
         break;
       case WebSocket.OPEN:
-        console.log('Connected');
+        console.log("Connected");
         break;
       case WebSocket.CLOSING:
-        console.log('Closing...');
+        console.log("Closing...");
         break;
       case WebSocket.CLOSED:
-        console.log('Connection closed');
+        console.log("Connection closed");
         break;
       default:
-        console.log('Unknown state');
+        console.log("Unknown state");
     }
   }, [readyState]);
 
@@ -79,7 +74,13 @@ const Channel = () => {
 
   return (
     <div>
-      <p>Channel: {sessionID} (<a href={window.location.href} target="_blank">Open in new tab</a>) </p>
+      <p>
+        Channel: {sessionID} (
+        <a href={window.location.href} target="_blank">
+          Open in new tab
+        </a>
+        ){" "}
+      </p>
 
       <div>
         <input
@@ -95,12 +96,14 @@ const Channel = () => {
         </div>
         <div>
           {messages.map((msg, index) => (
-            <div key={index}>{msg.userName}: {msg.value}</div>
+            <div key={index}>
+              {msg.userName}: {msg.value}
+            </div>
           ))}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Channel
+export default Channel;
